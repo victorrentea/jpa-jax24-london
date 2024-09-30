@@ -6,9 +6,11 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.BatchSize;
 
 @Data
 @Entity
+@BatchSize(size = 20)
 //@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class Country {
    @Id

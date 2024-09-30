@@ -25,7 +25,7 @@ public class Parent {
    @OneToMany(mappedBy = "parent", cascade = ALL
 //       , fetch = FetchType.EAGER// tell Hibernate to load all children every time it fetcjhes you a
    )
-//   @BatchSize(size = 1000) // Hibernate-specific: use select from CHILDREN WHERE c.parent_id IN (1,2,3 ... 1000)
+   @BatchSize(size = 20) // Hibernate-specific: use select from CHILDREN WHERE c.parent_id IN (1,2,3 ... 1000)
    private Set<Child> children = new HashSet<>();
 
    @ManyToOne
