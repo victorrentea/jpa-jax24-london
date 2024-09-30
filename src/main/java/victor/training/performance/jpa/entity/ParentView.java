@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-@Immutable
+@Immutable // hibernate will never UPDATE it
 @Getter
 public class ParentView {
    @Id

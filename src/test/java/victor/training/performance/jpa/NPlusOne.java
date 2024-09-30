@@ -2,6 +2,7 @@ package victor.training.performance.jpa;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,7 @@ public class NPlusOne {
 
   // This is what is displayed in a UI grid:
   private static void assertResults(Collection<?> results) {
+//    Assertions.assertEquals(,// no one uses assertEquals from JUnit. WE all use AssertJ
     assertThat(results)
         .extracting("name", "childrenNames")
         .containsExactlyInAnyOrder(

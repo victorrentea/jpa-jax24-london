@@ -3,7 +3,7 @@ drop table PARENT_VIEW; -- drop the table created by spring.jpa.hibernate.ddl-au
 create or replace view PARENT_VIEW as
 select p.ID, P.NAME, nvl(STRING_AGG(c.NAME, ',') within group (order by c.name asc), '') children_names
 from PARENT P
-         left join CHILD C on P.ID = C.PARENT_ID
+         left join CHILD C on P.ID = C.PARENT_ID -- the DB 'compiles' this query and if it's wrong, it will not accept the view
 group by p.ID, P.NAME;
 
 insert into SCOPE values ( 100, 'GLOBAL');
