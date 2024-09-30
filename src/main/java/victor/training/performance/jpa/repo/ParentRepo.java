@@ -14,8 +14,8 @@ public interface ParentRepo extends JpaRepository<Parent, Long> {
   // EntityManager#createQuery
   @Query("""
       SELECT p FROM Parent p
-      JOIN FETCH p.children
-      JOIN FETCH p.country
+      LEFT JOIN FETCH p.children
+      LEFT JOIN FETCH p.country
     """)
   List<Parent> findAllFetchingChildren();
 
