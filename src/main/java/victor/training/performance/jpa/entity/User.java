@@ -12,6 +12,12 @@ public class User {
 
     public User() {
     }
+
+    public User setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public User(String username) {
         this.username = username;
     }

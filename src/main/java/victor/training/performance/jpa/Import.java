@@ -48,10 +48,11 @@ public class Import {
 
       // it gives you a proxy that is not loaded until you access its properties (no SELECT)
       log.info("Before getReferenceById");
-      User user = userRepo.getReferenceById(record.userId()); // EntityManager.getReference
+//      User user = userRepo.getReferenceById(record.userId()); // EntityManager.getReference
 //      User user = userRepo.findById(record.userId()).orElseThrow(); // +1 SELECT
+      User user = new User().setId(record.userId());
       log.info("After getReferenceById : " + user.getClass());
-      log.info("after .tostring " + user);
+//      log.info("after .tostring " + user);
 
       Uber entity = new Uber()
           .setFiscalCountry(country)
