@@ -14,7 +14,7 @@ import victor.training.performance.jpa.repo.ParentRepo;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Transactional // this applies to all public methods below, when called from outside
+//@Transactional // this applies to all public methods below, when called from outside
 public class TransactionalWaste {
   private final ParentRepo parentRepo;
   private final RestTemplate restTemplate = new RestTemplate();
@@ -26,6 +26,7 @@ public class TransactionalWaste {
   // 1) Table Lock (😱): SQL= LOCK TABLE JOB_IS_RUNNING
   // 2) Row Lock: SQL= SELECT * FROM PARENT WHERE ID = 13 FOR UPDATE
   @GetMapping("parent/{parentId}")
+//  @Transactional(readOnly = true) // means that the transaction will not write anything to the DB
   public Response transactional(@PathVariable @DefaultValue("101") long parentId) {
     Parent parent = parentRepo.findById(parentId).orElseThrow();
     String review = restTemplate.getForObject("http://localhost:8080/external-call/" + parentId,String.class);
