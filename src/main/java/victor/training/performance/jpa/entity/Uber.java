@@ -19,7 +19,11 @@ public class Uber {
     private String name;
     private String address;
     private String city;
+
+    private String bankName;
+    private String swiftCode;
     private String ibanCode;
+
     private String cnp;
     private String ssn;
     private String passportNumber;
