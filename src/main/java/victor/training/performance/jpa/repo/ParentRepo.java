@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 public interface ParentRepo extends JpaRepository<Parent, Long> {
 
+
+
   // EntityManager#createQuery
   @Query("""
       SELECT p FROM Parent p
@@ -23,8 +25,13 @@ public interface ParentRepo extends JpaRepository<Parent, Long> {
     """)
   List<Parent> findAllFetchingChildren();
 
+  // interesting: change the paradigm, and go CQRS
+  // fetch only the data you need
+  @Query("select p.name from Parent p where p.id = :parentId")
+  String loadName(long parentId);
 
-    interface ParentProjection { // Spring generates an implementation of this interface
+
+  interface ParentProjection { // Spring generates an implementation of this interface
       Long getId();
       String getName();
       String getChildrenNames();

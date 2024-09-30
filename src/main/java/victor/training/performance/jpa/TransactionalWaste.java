@@ -30,9 +30,11 @@ public class TransactionalWaste {
   @GetMapping("parent/{parentId}")
 //  @Transactional(readOnly = true) // means that the transaction will not write anything to the DB
   public Response transactional(@PathVariable @DefaultValue("101") long parentId) {
-    Parent parent = parentRepo.findById(parentId).orElseThrow();
-    String review = restTemplate.getForObject("http://localhost:8080/external-call/" + parentId,String.class);
-    return new Response(parent.getName(), review);
+//    Parent parent = parentRepo.findById(parentId).orElseThrow();
+    String parentName = parentRepo.loadName(parentId);
+    String review = restTemplate.getForObject(
+        "http://localhost:8080/external-call/" + parentId,String.class);
+    return new Response(parentName, review);
   }
 
 
@@ -44,10 +46,13 @@ public class TransactionalWaste {
 class OtherContr {
   private final ParentRepo parentRepo;
   @GetMapping("parent/lazy")
-//  @Transactional // with or without is the same
+  @Transactional(readOnly = true) // with or without is the same
   public Parent lazy() {
     Parent parent = parentRepo.findById(101L).orElseThrow();
     System.out.println("exit");
+    parent.getChildren().size(); // DO NOT REMOVE THIS: it forces the lazy loading on
+    // this collection for serialization to worjk !!!!
+    //https://stackoverflow.com/questions/11746499/how-to-solve-the-failed-to-lazily-initialize-a-collection-of-role-hibernate-ex
     return parent;
   }
 }
