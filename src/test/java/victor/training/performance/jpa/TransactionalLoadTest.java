@@ -34,7 +34,7 @@ public class TransactionalLoadTest extends Simulation {
 
   {
     setUp(scenario(getClass().getSimpleName())
-        .exec(http("").get("/parent/101"))
+        .exec(http("").get("/parent/lazy"))
         // 23 threads will fire requests in a loop
         .injectClosed(constantConcurrentUsers(23)
             .during(ofSeconds(8))))

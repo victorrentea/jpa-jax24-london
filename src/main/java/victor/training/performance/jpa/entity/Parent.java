@@ -32,6 +32,10 @@ public class Parent {
    @BatchSize(size = 20) // Hibernate-specific: use select from CHILDREN WHERE c.parent_id IN (1,2,3 ... 1000)
    private Set<Child> children = new HashSet<>();
 
+   public Set<Child> getChildren() {
+      return children;
+   }
+
    @ManyToOne
    private Country country; // surprise !
 
