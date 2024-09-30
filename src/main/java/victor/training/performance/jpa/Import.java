@@ -43,15 +43,17 @@ public class Import {
   private void savePageInTx(List<ImportedRecord> page) {
     log.info("▶️▶️▶️▶️▶️▶️ Start page"); // runs in a tx commited at the end of the method
     for (ImportedRecord record : page) {
+      // A
       Country country = countryRepo.findByIso2Code(record.countryIso2Code()).orElseThrow();
       User user = userRepo.findById(record.userId()).orElseThrow();
-      // fairy god mother gave us the ID of the country
-//      Long countryId = ...;
-
       Uber entity = new Uber()
           .setFiscalCountry(country)
           .setCreatedBy(user);
       uberRepo.save(entity);
+      // .save can act as an insert(.persist) or update(.merge)
+      // if the entity has a null ID => INSERT(persist)
+      // if the entity has a non-null ID => UPDATE(merge) maybe?
+         // to know whether the entity is new or not, Hibernate checks the ID in the DB => SELECT
     }
   }
 }
