@@ -38,4 +38,26 @@ public interface ParentSearchRepo extends JpaRepository<Parent, Long> {
   @Query("SELECT p FROM ParentView p WHERE p.name LIKE ?1")
   Page<ParentView> findViews(String namePart, Pageable pageable); // #1 driving
 
+  @Query("""
+        SELECT pv 
+        FROM ParentView pv 
+        JOIN Parent p ON p.id = pv.id
+        WHERE p.country.name LIKE ?1
+    """)
+
+  Page<ParentView> findViewsByCountry(String countyNamePart Pageable pageable); // #1 driving
+
+
+  @Query("""
+        SELECT pv 
+        FROM ParentView pv 
+        JOIN Parent p ON p.id = pv.id
+        WHERE p.country.name LIKE ?1
+        AND p.name LIKE ?2
+    """)
+  Page<ParentView> findViewsByCountryAndName(
+      String countyNamePart,
+      String parentNamePart,
+      Pageable pageable); // #1 driving
+
 }
