@@ -9,7 +9,8 @@ import jakarta.persistence.Id;
 @Entity
 @Immutable // hibernate will never UPDATE it
 @Getter
-public class ParentView {
+public class ParentView { // mapped to JSON,
+   // a dedicated model for optimizing the query (as in CQRS)
    @Id
    private Long id;
    private String name;
