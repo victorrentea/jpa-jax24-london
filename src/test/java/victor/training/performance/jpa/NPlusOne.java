@@ -49,7 +49,7 @@ public class NPlusOne {
     );
     repo.save(new Parent("Peter")
         .setAge(41)
-        .setCountry(romania)
+        .setCountry(moldavia)
         .addChild(new Child("Maria"))
         .addChild(new Child("Paul"))
         .addChild(new Child("Stephan"))
