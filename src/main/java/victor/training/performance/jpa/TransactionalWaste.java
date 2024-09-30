@@ -50,6 +50,7 @@ class OtherContr {
   public Parent lazy() {
     Parent parent = parentRepo.findById(101L).orElseThrow();
     System.out.println("exit");
+//    if ()
     parent.getChildren().size(); // DO NOT REMOVE THIS: it forces the lazy loading on
     // this collection for serialization to worjk !!!!
     //https://stackoverflow.com/questions/11746499/how-to-solve-the-failed-to-lazily-initialize-a-collection-of-role-hibernate-ex
