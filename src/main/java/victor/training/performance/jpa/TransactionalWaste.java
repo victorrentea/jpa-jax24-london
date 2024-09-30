@@ -1,8 +1,10 @@
 package victor.training.performance.jpa;
 
+import jdk.jfr.TransitionTo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +30,25 @@ public class TransactionalWaste {
   @GetMapping("parent/{parentId}")
 //  @Transactional(readOnly = true) // means that the transaction will not write anything to the DB
   public Response transactional(@PathVariable @DefaultValue("101") long parentId) {
-    Parent parent = parentRepo.findById(parentId).orElseThrow();
     String review = restTemplate.getForObject("http://localhost:8080/external-call/" + parentId,String.class);
+    Parent parent = parentRepo.findById(parentId).orElseThrow();
     return new Response(parent.getName(), review);
+  }
+
+
+}
+
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+class OtherContr {
+  private final ParentRepo parentRepo;
+  @GetMapping("parent/lazy")
+//  @Transactional // with or without is the same
+  public Parent lazy() {
+    Parent parent = parentRepo.findById(101L).orElseThrow();
+    System.out.println("exit");
+    return parent;
   }
 }
 
