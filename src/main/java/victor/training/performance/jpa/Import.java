@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class Import {
-  public static final int ITEMS_PER_PAGE = 50;
+  public static final int ITEMS_PER_PAGE = 5;
   private final UberRepo uberRepo;
   private final UserRepo userRepo;
   private final CountryRepo countryRepo;
@@ -41,14 +41,18 @@ public class Import {
 //  @Transactional // call annotations that should make stuff work when the method is called magically
 //  do not work if the method is invoked within the same class
   private void savePageInTx(List<ImportedRecord> page) {
-    log.info("▶️▶️▶️▶️▶️▶️ Start page"); // runs in a tx commited at the end of the method
+    log.info("▶️▶️▶️▶️▶️▶️ Start page ( a new tx )"); // runs in a tx commited at the end of the method
     for (ImportedRecord record : page) {
       // A
       Country country = countryRepo.findByIso2Code(record.countryIso2Code()).orElseThrow();
-//      User user = userRepo.findById(record.userId()).orElseThrow(); // SELECT
 
       // it gives you a proxy that is not loaded until you access its properties (no SELECT)
+      log.info("Before getReferenceById");
       User user = userRepo.getReferenceById(record.userId()); // EntityManager.getReference
+//      User user = userRepo.findById(record.userId()).orElseThrow(); // +1 SELECT
+      log.info("After getReferenceById : " + user.getClass());
+      log.info("after .tostring " + user);
+
       Uber entity = new Uber()
           .setFiscalCountry(country)
           .setCreatedBy(user);

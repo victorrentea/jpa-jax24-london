@@ -54,7 +54,7 @@ public class MassImport {
   @Test
   public void massInsert() {
     log.info("vvvvvvvvvvv Start mass insert");
-    List<ImportedRecord> records = IntStream.range(0, 100)
+    List<ImportedRecord> records = IntStream.range(0, 10)
         .mapToObj(i -> new ImportedRecord("name" + i, "RO", userId))
         .toList();
     massInsert.bulkImport(records);
