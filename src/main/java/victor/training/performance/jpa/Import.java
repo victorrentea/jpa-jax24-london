@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class Import {
-  public static final int ITEMS_PER_PAGE = 5;
+  public static final int ITEMS_PER_PAGE = 50;
   private final UberRepo uberRepo;
   private final UserRepo userRepo;
   private final CountryRepo countryRepo;
@@ -45,7 +45,10 @@ public class Import {
     for (ImportedRecord record : page) {
       // A
       Country country = countryRepo.findByIso2Code(record.countryIso2Code()).orElseThrow();
-      User user = userRepo.findById(record.userId()).orElseThrow();
+//      User user = userRepo.findById(record.userId()).orElseThrow(); // SELECT
+
+      // it gives you a proxy that is not loaded until you access its properties (no SELECT)
+      User user = userRepo.getReferenceById(record.userId()); // EntityManager.getReference
       Uber entity = new Uber()
           .setFiscalCountry(country)
           .setCreatedBy(user);

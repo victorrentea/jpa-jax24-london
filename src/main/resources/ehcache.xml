@@ -8,5 +8,11 @@
             <heap unit="entries">1000</heap>
         </resources>
     </cache>
+    <cache alias="country-by-iso" >
+        <resources>
+            <heap unit="MB">1000</heap>
+<!--            <disk-->
+        </resources>
+    </cache>
 
 </config>
