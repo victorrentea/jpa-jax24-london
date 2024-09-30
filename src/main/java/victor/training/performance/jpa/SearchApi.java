@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import victor.training.performance.jpa.entity.Parent;
 import victor.training.performance.jpa.repo.ParentSearchRepo;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Slf4j
 @RestController
@@ -28,19 +33,12 @@ public class SearchApi {
   ) {
     PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Direction.fromString(dir), order);
 
-    Page<Parent> pageOfParents = parentSearchRepo.searchByNameLike("%" + q + "%", pageRequest);
-    Page<ParentDto> pageOfDto = pageOfParents.map(parent -> ParentDto.fromEntity(parent));
-    return pageOfDto;
-    // TODO #1 - start the JpaApp and inspect response of http://localhost:8080/search
-    //   then look in the logs to see the number of queries executed
-
-    // TODO #2 - return a Page<ParentDto> mapped from entities ; commit DONE
-    //   reduce the number of DB queries using @BatchSize ; commit
-
-    // TODO #3 - use the driving query technique
-    //   1. use #findIdsPage to identify which Parents match the criteria
-    //   2. use #fetchParentsByIds to load Parents with children
-    //   commit;
+    Page<Long> parentId = parentSearchRepo.findIdsPage("%" + q + "%", pageRequest);
+    Set<Parent> parents = parentSearchRepo.fetchParentsByIds(parentId.getContent());
+    Map<Long, Parent> parentsById = parents.stream().collect(
+        Collectors.toMap(Parent::getId, parent->parent));
+    return parentId.map(parentsById::get)
+        .map(ParentDto::fromEntity);
 
     // TODO #4 - write a @Query method that select from ParentView or ParentSubselect instead of Parent; commit
     //   how many queries are executed now? ; commit

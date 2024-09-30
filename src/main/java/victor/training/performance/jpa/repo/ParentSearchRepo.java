@@ -15,7 +15,6 @@ public interface ParentSearchRepo extends JpaRepository<Parent, Long> {
   @Query("""
         SELECT p 
         FROM Parent p 
-        LEFT JOIN FETCH p.children
         WHERE p.name LIKE ?1
         """)
   Page<Parent> searchByNameLike(String namePart, Pageable pageable);
