@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -31,9 +32,9 @@ public class Parent {
    @ManyToOne
    private Country country; // surprise !
 
-   public Parent() {}
+   protected Parent() {} // Can't touch this!! 🎵 . It's only for Hibernate
    public Parent(String name) {
-      this.name = name;
+      this.name = Objects.requireNonNull(name);
    }
 
    public Parent addChild(Child child) {

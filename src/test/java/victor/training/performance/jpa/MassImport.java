@@ -64,11 +64,11 @@ public class MassImport {
   @Test
   @Disabled("only a problem in older Hibernate versions")
   public void sequence_1_legacy() {
-    parentRepo.save(new Parent());
-    parentRepo.save(new Parent());
-    parentRepo.save(new Parent());
-    parentRepo.save(new Parent());
-    parentRepo.save(new Parent());
+    parentRepo.save(new Parent(""));
+    parentRepo.save(new Parent(""));
+    parentRepo.save(new Parent(""));
+    parentRepo.save(new Parent(""));
+    parentRepo.save(new Parent(""));
 
     // You should only see 1-2 SELECT from the sequence
   }

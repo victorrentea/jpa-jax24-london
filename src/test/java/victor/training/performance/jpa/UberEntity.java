@@ -61,7 +61,7 @@ public class UberEntity {
     Uber uber = new Uber()
         .setName("::uberName::")
         .setStatus(Status.SUBMITTED)
-        .setOriginCountry(belgium)
+        .setOriginCountryId(belgium.getId())
         .setFiscalCountry(romania)
         .setInvoicingCountry(france)
         .setNationality(serbia)
@@ -78,9 +78,11 @@ public class UberEntity {
   @Test
   public void jpql() {
     log.info("SELECTING a 'very OOP' @Entity with JPQL ...");
-    List<Uber> list = uberRepo.findAll();
-//        List<UberEntity> list = uberRepo.findAllWithQuery();// EQUIVALENT
-//        List<UberEntity> list = uberRepo.findByName("::uberName::");// EQUIVALENT
+//    List<Uber> list = uberRepo.findAll();
+//        List<Uber> list = uberRepo.findAllWithQuery();// EQUIVALENT
+    List<Uber> list = uberRepo.findByName("::uberName::");// EQUIVALENT
+    // aditional SELECT in DB every time you send a  JPQL query to DB
+    // for evrery @ManyToOne (in the worst case)
     log.info("Loaded using JPQL (see how many queries are above):\n" + list);
   }
 
@@ -114,41 +116,41 @@ public class UberEntity {
   }
 
   private List<UberSearchResult> classicSearch(UberSearchCriteria criteria) {
-    String jpql = "SELECT u FROM Uber u WHERE 1 = 1 ";
+    // if you ever search over a large dataset
+    // not only you shold not leak @ENtity as JSON out.
+    // yuou should not even bring @ENtity in memory from DB
+//    String jpql = "SELECT u FROM Uber u WHERE 1 = 1 ";
+    // in the UI/client they only need 3 fields:
+//    record UberSearchResult(String id, String name, String originCountry)//
+//    String jpql = "SELECT u.id, u.name, oc.name" + //=> List<Object[]>
+    String jpql = "SELECT new victor.training.performance.jpa.UberSearchResult(" +
+                  "u.id, u.name, oc.name) " + // if they grow to many,
+                  // create a spring interface projection with the column names
+                  // as getters and extract that from the query > cleaner for many fields
+                  " FROM Uber u JOIN Country oc ON oc.id=u.originCountryId " +
+                  " WHERE 1 = 1 ";
     // alternative implementation: CriteriaAPI, Criteria+Metamodel, QueryDSL, Spring Specifications
     Map<String, Object> params = new HashMap<>();
-    if (criteria.name != null) {
+    if (criteria.name() != null) {
       jpql += " AND u.name = :name ";
-      params.put("name", criteria.name);
+      params.put("name", criteria.name());
     }
-    if (criteria.status != null) {
+    if (criteria.status() != null) {
       jpql += " AND u.status = :status ";
-      params.put("status", criteria.status);
+      params.put("status", criteria.status());
     }
-    var query = em.createQuery(jpql, Uber.class);
+    var query = em.createQuery(jpql, UberSearchResult.class);
     for (String key : params.keySet()) {
       query.setParameter(key, params.get(key));
     }
     var results = query.getResultList();
 
     // OR: Spring Data Repo @Query with a fixed JPQL
-//        results = uberRepo.searchFixedJqpl(criteria.name, criteria.status);
+//    var results = uberRepo.searchFixedJqpl(criteria.name, criteria.status);
 
-    return results.stream().map(this::toResult).collect(toList());
+    // you don't need to map in memory, but instead you extract from the query directly what you need
+    return results;
   }
 
-  private UberSearchResult toResult(Uber entity) {
-    return new UberSearchResult(
-        entity.getId(),
-        entity.getName(),
-        entity.getOriginCountry().getName());
-  }
-
-  @Builder
-  record UberSearchCriteria(String name, Status status, boolean hasPassport) {
-  }
-
-  record UberSearchResult(String id, String name, String originCountry) {
-  }
 }
 
