@@ -2,6 +2,7 @@ package victor.training.performance.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import victor.training.performance.jpa.util.UUIDIdentifierGenerator.GeneratedUUID;
 
 import java.sql.Clob;
 import java.util.UUID;
@@ -16,9 +17,12 @@ record BankAccount(String bankName, String swiftCode, String ibanCode) {
 @Data
 public class Uber {
     @Id
-//    @GeneratedUUID// .save(entity{id=null}) => generator is called to create an id
-//    private String id;
-    private String id = UUID.randomUUID().toString(); // .save(entity{id!=null}) => .merge() => +1 SELECT before every INSERT
+    @GeneratedUUID// .save(entity{id=null}) => generator is called to create an id
+    private String id; // not dev-friendly, and a bit larger: all the tables FKyinh this will have a 40 char string
+//    private UUID id; custom types maped to a DB-specific type
+
+    // alternate key
+//    private String externalUUID= UUID.randomUUID().toString(); // not a good idea to have a UUID in the DB, but if you must, use a binary(16) column
 
     private String name;
     private String address;
