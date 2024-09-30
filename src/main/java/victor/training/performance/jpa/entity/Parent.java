@@ -21,8 +21,9 @@ public class Parent {
    private String name;
    private Integer age;
 
-   @OneToMany(mappedBy = "parent", cascade = ALL)
-   // @BatchSize(size=10) // Hibernate magic that avoids N+1 using ID IN (?,?..,?10)
+   @OneToMany(mappedBy = "parent", cascade = ALL
+//       , fetch = FetchType.EAGER// tell Hibernate to load all children every time it fetcjhes you a
+   )
    private Set<Child> children = new HashSet<>();
 
    @ManyToOne
