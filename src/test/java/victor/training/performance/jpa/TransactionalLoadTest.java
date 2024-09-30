@@ -27,6 +27,7 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class TransactionalLoadTest extends Simulation {
+  //jMeter
   public static void main(String[] args) {
     GatlingEngine.startClass(TransactionalLoadTest.class);
   }
