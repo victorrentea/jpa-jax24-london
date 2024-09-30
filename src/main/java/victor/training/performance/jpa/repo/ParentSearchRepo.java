@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import victor.training.performance.jpa.entity.Parent;
+import victor.training.performance.jpa.entity.ParentView;
 
 import java.util.List;
 import java.util.Set;
@@ -32,4 +33,9 @@ public interface ParentSearchRepo extends JpaRepository<Parent, Long> {
         LEFT JOIN FETCH p.country
       WHERE p.id IN ?1""")
   Set<Parent> fetchParentsByIds(List<Long> parentIds); // #2 fetching
+
+
+  @Query("SELECT p FROM ParentView p WHERE p.name LIKE ?1")
+  Page<ParentView> findViews(String namePart, Pageable pageable); // #1 driving
+
 }
