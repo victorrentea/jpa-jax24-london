@@ -30,8 +30,8 @@ public class TransactionalWaste {
   @GetMapping("parent/{parentId}")
 //  @Transactional(readOnly = true) // means that the transaction will not write anything to the DB
   public Response transactional(@PathVariable @DefaultValue("101") long parentId) {
-    String review = restTemplate.getForObject("http://localhost:8080/external-call/" + parentId,String.class);
     Parent parent = parentRepo.findById(parentId).orElseThrow();
+    String review = restTemplate.getForObject("http://localhost:8080/external-call/" + parentId,String.class);
     return new Response(parent.getName(), review);
   }
 
