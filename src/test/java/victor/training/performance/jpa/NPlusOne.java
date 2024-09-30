@@ -76,8 +76,9 @@ public class NPlusOne {
   @Test
   public void selectFullEntity() {
     log.info("Start test");
-//    List<Parent> parents = repo.findAll();
-    List<Parent> parents = repo.findAllFetchingChildren();
+    countryRepo.findAll(); // preheat the 1st level cache 🥷
+    List<Parent> parents = repo.findAll();
+//    List<Parent> parents = repo.findAllFetchingChildren();
     log.info("Loaded {} parents: {}", parents.size(), parents);
 
     List<ParentDto> results = toSearchResults(parents);
