@@ -12,7 +12,10 @@ import java.util.stream.Stream;
 public interface ParentRepo extends JpaRepository<Parent, Long> {
 
   // EntityManager#createQuery
-  @Query("SELECT p FROM Parent p JOIN FETCH p.children")
+  @Query("""
+      SELECT p FROM Parent p
+      JOIN FETCH p.children
+    """)
   List<Parent> findAllFetchingChildren();
 
 

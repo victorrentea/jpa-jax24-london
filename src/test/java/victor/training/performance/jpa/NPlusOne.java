@@ -55,7 +55,7 @@ public class NPlusOne {
         .addChild(new Child("Stephan"))
     );
     repo.save(new Parent("Trofim") // bachelor, no children
-        .setCountry(moldavia)
+        .setCountry(romania)
         .setAge(42));
     TestTransaction.end(); // force a COMMIT
 
@@ -75,8 +75,8 @@ public class NPlusOne {
   // ======================= SELECT full @Entity =============================
   @Test
   public void selectFullEntity() {
-//    List<Parent> parents = repo.findAll();
     log.info("Start test");
+//    List<Parent> parents = repo.findAll();
     List<Parent> parents = repo.findAllFetchingChildren();
     log.info("Loaded {} parents: {}", parents.size(), parents);
 
