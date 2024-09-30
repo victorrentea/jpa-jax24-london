@@ -14,5 +14,6 @@ public class ParentView { // mapped to JSON,
    @Id
    private Long id;
    private String name;
+   private String countryName;
    private String childrenNames;
 }

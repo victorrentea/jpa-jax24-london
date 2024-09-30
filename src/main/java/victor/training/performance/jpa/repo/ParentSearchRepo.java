@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import victor.training.performance.jpa.entity.Parent;
 import victor.training.performance.jpa.entity.ParentView;
 
@@ -45,19 +46,19 @@ public interface ParentSearchRepo extends JpaRepository<Parent, Long> {
         WHERE p.country.name LIKE ?1
     """)
 
-  Page<ParentView> findViewsByCountry(String countyNamePart Pageable pageable); // #1 driving
+  Page<ParentView> findViewsByCountry(String countyNamePart, Pageable pageable); // #1 driving
 
 
   @Query("""
         SELECT pv 
         FROM ParentView pv 
         JOIN Parent p ON p.id = pv.id
-        WHERE p.country.name LIKE ?1
-        AND p.name LIKE ?2
+        WHERE (:parentName is null OR UPPER(p.name) LIKE UPPER('%' || :parentName || '%')) AND 
+              (:countryName is null OR UPPER(p.country.name) LIKE UPPER('%' || :countryName || '%'))
     """)
   Page<ParentView> findViewsByCountryAndName(
-      String countyNamePart,
-      String parentNamePart,
+      @Param("parentName") String parentNamePart,
+      @Param("countryName") String countyNamePart,
       Pageable pageable); // #1 driving
 
 }

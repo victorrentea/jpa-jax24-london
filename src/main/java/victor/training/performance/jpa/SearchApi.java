@@ -20,7 +20,8 @@ public class SearchApi {
 
   @GetMapping("search")
   public Page<ParentView> searchPaginated(
-      @RequestParam(defaultValue = "ar") String q,
+      @RequestParam(defaultValue = "") String q,
+      @RequestParam(defaultValue = "") String c,
       @RequestParam(defaultValue = "0") int pageIndex,
       @RequestParam(defaultValue = "20") int pageSize,
       @RequestParam(defaultValue = "name") String order,
@@ -28,11 +29,11 @@ public class SearchApi {
   ) {
     PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Direction.fromString(dir), order);
 
-    Page<Long> parentId = parentSearchRepo.findIdsPage("%" + q + "%", pageRequest);
-
 //    Page<Subselect>
     Page<ParentView> results = parentSearchRepo
-        .findViews("%" + q + "%", pageRequest);
+        .findViewsByCountryAndName(
+            "%" + q + "%",
+            "%" + c + "%", pageRequest);
     return results;
     // TODO #4 - write a @Query method that select from
     //  ParentView or
