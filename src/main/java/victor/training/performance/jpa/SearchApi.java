@@ -19,7 +19,7 @@ public class SearchApi {
   private final ParentSearchRepo parentSearchRepo;
 
   @GetMapping("search")
-  public Page<Parent> searchPaginated(
+  public Page<ParentDto> searchPaginated(
       @RequestParam(defaultValue = "ar") String q,
       @RequestParam(defaultValue = "0") int pageIndex,
       @RequestParam(defaultValue = "20") int pageSize,
@@ -28,11 +28,13 @@ public class SearchApi {
   ) {
     PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Direction.fromString(dir), order);
 
-    return parentSearchRepo.searchByNameLike("%" + q + "%", pageRequest);
+    Page<Parent> pageOfParents = parentSearchRepo.searchByNameLike("%" + q + "%", pageRequest);
+    Page<ParentDto> pageOfDto = pageOfParents.map(parent -> ParentDto.fromEntity(parent));
+    return pageOfDto;
     // TODO #1 - start the JpaApp and inspect response of http://localhost:8080/search
     //   then look in the logs to see the number of queries executed
 
-    // TODO #2 - return a list of ParentDto mapped from entities ; commit
+    // TODO #2 - return a Page<ParentDto> mapped from entities ; commit DONE
     //   reduce the number of DB queries using @BatchSize ; commit
 
     // TODO #3 - use the driving query technique

@@ -39,12 +39,17 @@ public interface ParentRepo extends JpaRepository<Parent, Long> {
       select p.id as id, 
              p.name as name,
              nvl(string_agg(c.name, ',') 
-                within group (order by c.name asc), '') as childrenNames
+                within group (order by c.name asc), '') 
+                 as childrenNames
       from parent p
       left join child c on p.id = c.parent_id
       group by p.id, p.name
       """)
   List<ParentProjection> nativeQuery();
+//  List<Object[]> nativeQuery(); // #life-sucks-without-projects
+  // var idOfFirst = resultList.get(0)[0]
+
+  // var idOfFirst = resultList.get(0).getId(); 💖
 
 
     // if you bundle the native query inside a @Subselect,
