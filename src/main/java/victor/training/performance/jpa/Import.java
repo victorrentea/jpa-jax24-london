@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import victor.training.performance.jpa.entity.Country;
 import victor.training.performance.jpa.entity.Uber;
@@ -29,18 +30,24 @@ public class Import {
   }
 
   public void bulkImport(List<ImportedRecord> allRecords) {
-    TransactionTemplate tx = new TransactionTemplate(transactionManager);
+    TransactionTemplate newTransaction = new TransactionTemplate(transactionManager);
     List<List<ImportedRecord>> pages = Lists.partition(allRecords, ITEMS_PER_PAGE);
+    // Map<String, Long> countryIdByIso2Code = countryRepo.findAll().stream().collect(toMap(Country::getIso2Code, Country::getId));
     for (List<ImportedRecord> page : pages) {
-      tx.executeWithoutResult(status -> savePageInTx(page));
+      newTransaction.executeWithoutResult(status -> savePageInTx(page));
     }
   }
 
+//  @Transactional // call annotations that should make stuff work when the method is called magically
+//  do not work if the method is invoked within the same class
   private void savePageInTx(List<ImportedRecord> page) {
-    log.info("▶️▶️▶️▶️▶️▶️ Start page");
+    log.info("▶️▶️▶️▶️▶️▶️ Start page"); // runs in a tx commited at the end of the method
     for (ImportedRecord record : page) {
-      Country country = countryRepo.findByIso2Code("RO").orElseThrow();
+      Country country = countryRepo.findByIso2Code(record.countryIso2Code()).orElseThrow();
       User user = userRepo.findById(record.userId()).orElseThrow();
+      // fairy god mother gave us the ID of the country
+//      Long countryId = ...;
+
       Uber entity = new Uber()
           .setFiscalCountry(country)
           .setCreatedBy(user);
