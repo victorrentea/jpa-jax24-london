@@ -1,7 +1,9 @@
 package victor.training.performance.jpa.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 
@@ -15,6 +17,7 @@ import static jakarta.persistence.CascadeType.ALL;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Parent {
    @Id
    @GeneratedValue// TODO ⚠️older versions might do (strategy = GenerationType.SEQUENCE, generator = "parent_seq")
@@ -32,7 +35,7 @@ public class Parent {
    @ManyToOne
    private Country country; // surprise !
 
-   protected Parent() {} // Can't touch this!! 🎵 . It's only for Hibernate
+//   protected Parent() {} // Can't touch this!! 🎵 . It's only for Hibernate
    public Parent(String name) {
       this.name = Objects.requireNonNull(name);
    }
