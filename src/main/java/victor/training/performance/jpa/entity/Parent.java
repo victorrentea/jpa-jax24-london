@@ -3,6 +3,7 @@ package victor.training.performance.jpa.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class Parent {
    @OneToMany(mappedBy = "parent", cascade = ALL
 //       , fetch = FetchType.EAGER// tell Hibernate to load all children every time it fetcjhes you a
    )
+   @BatchSize(size = 1000) // Hibernate-specific: use select from CHILDREN WHERE c.parent_id IN (1,2,3 ... 1000)
    private Set<Child> children = new HashSet<>();
 
    @ManyToOne
