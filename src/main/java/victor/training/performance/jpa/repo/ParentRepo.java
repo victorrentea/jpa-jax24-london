@@ -11,6 +11,11 @@ import java.util.stream.Stream;
 
 public interface ParentRepo extends JpaRepository<Parent, Long> {
 
+  // EntityManager#createQuery
+  @Query("SELECT p FROM Parent p JOIN FETCH p.children")
+  List<Parent> findAllFetchingChildren();
+
+
   interface ParentProjection { // Spring generates an implementation of this interface
     Long getId();
     String getName();
