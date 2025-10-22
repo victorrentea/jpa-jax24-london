@@ -45,6 +45,10 @@ public class Uber {
 //    @ManyToOne
 //    private Country originCountry;
 
+    @Version
+    private Long version; // optimistic locking
+    // send this to the client, and when you get it back, Hibernate check automatically if it's the same as in the DB
+
     private Long originCountryId; // numeric link => -1 JOIN or -1 SELECT everywhere
 
     @ManyToOne
